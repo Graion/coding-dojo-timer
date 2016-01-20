@@ -1,16 +1,5 @@
-!function () {
+(function () {
     'use strict'
-
-    function getInput() {
-        var time = [5, 0]
-          , count = 0
-        if (!window.confirm('Five minutes?')) while (!count) {
-            window.prompt('Enter time').replace(/(\d+)/g, function (val) {
-                time[count++] = parseInt(val, 10)
-            })
-        }
-        return time
-    }
 
     function pad(value) {
         return ('0' + value).slice(-2)
@@ -26,7 +15,6 @@
     var clock = document.querySelector('.clock')
       , stage = document.body
       , beep = clock.querySelector('audio')
-      , base = getInput()
       , time, tick, timeout
 
     var action = {
@@ -35,7 +23,7 @@
             stage.classList.remove('timeout')
             timeout = false
             beep.currentTime && (beep.currentTime = 0)
-            time = [].concat(base)
+            time = [5, 0]
             display()
         }
       , pause: function (audio) {
@@ -79,4 +67,4 @@
 
     stage.classList.add('show')
     action.reset()
-}()
+})()
