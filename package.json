@@ -1,0 +1,21 @@
+{
+  "name": "coding-dojo-timer",
+  "version": "1.0.0",
+  "description": "A simple full screen countdown timer to coding dojos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Graion/coding-dojo-timer.git"
+  },
+  "keywords": [
+    "coding",
+    "dojo",
+    "timer"
+  ],
+  "author": "Santiago Rojo <santiago.rojo@graion.com>",
+  "license": "MIT",
+  "homepage": "http://graion.github.io/coding-dojo-timer",
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "gulp": "^3.9.0"
+  }
+}
