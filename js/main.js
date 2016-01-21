@@ -1,73 +1,107 @@
 (function () {
-    'use strict'
+  'use strict';
 
-    function pad(value) {
-        return ('0' + value).slice(-2)
+  let roundPerMatch,
+      roundTime;
+
+  function readSettings() {
+    let roundsCount = document.getElementById('roundsCount'),
+        roundSize = document.getElementById('roundSize');
+
+    roundsCount.value = roundPerMatch = parseInt(roundsCount.value || 5, 10);
+    roundSize.value = roundTime = parseInt(roundSize.value || 7, 10);
+
+    stage.classList.add('show');
+  }
+
+  function pad(value) {
+    return ('0' + value).slice(-2);
+  }
+
+  function display() {
+    let display = clock.querySelector('.display'),
+      status = clock.querySelector('.status');
+
+    display.textContent = pad(time.minutes) + ':' + pad(time.seconds);
+    status.innerHTML = 'Slot: ' + ((roundsCounter % roundPerMatch) || roundPerMatch) + ' de ' + roundPerMatch + ' <br>Ronda: ' + (Math.floor(roundsCounter / roundPerMatch) + 1);
+  }
+
+  let clock = document.querySelector('.clock'),
+    stage = document.body,
+    roundAlarm = clock.querySelector('audio#round'),
+    matchAlarm = clock.querySelector('audio#match'),
+    roundsCounter = 1,
+    time,
+    tick,
+    timeout;
+
+  let action = {
+    reset: function () {
+      readSettings();
+      action.pause();
+      stage.classList.remove('timeout');
+      timeout = false;
+      if (roundAlarm.currentTime) {
+        roundAlarm.currentTime = 0;
+      }
+      time = {minutes: roundTime, seconds: 0};
+      display();
+    },
+    pause: function (audio) {
+      stage.classList.remove('on');
+      if (!audio) {
+        ((roundsCounter % roundPerMatch === 0)? matchAlarm : roundAlarm).pause();
+      }
+      clearTimeout(tick);
+    },
+    start: function () {
+      if (timeout) {
+        action.reset();
+      }
+      clearTimeout(tick);
+      stage.classList.add('on');
+      tick = setInterval(ticker, 1000);
     }
+  };
 
-    function display() {
-        var el = clock.querySelector('.display');
-
-        (display = function () {
-            el.textContent = pad(time.minutes) + ':' + pad(time.seconds);
-        })()
+  function ticker() {
+    time.seconds--;
+    if (time.seconds < 0) {
+      time.seconds = 59;
+      time.minutes--;
     }
-
-    var clock = document.querySelector('.clock'),
-        stage = document.body,
-        beep = clock.querySelector('audio'),
-        time,
-        tick,
-        timeout;
-
-    var action = {
-        reset: function () {
-            action.pause()
-            stage.classList.remove('timeout')
-            timeout = false
-            beep.currentTime && (beep.currentTime = 0)
-            time = {minutes: 7, seconds: 0}
-            display()
+    if (!time.minutes) {
+      if (roundsCounter % roundPerMatch === 0) {
+        if (parseInt(matchAlarm.duration, 10) >= time.seconds) {
+          matchAlarm.play();
         }
-      , pause: function (audio) {
-            stage.classList.remove('on')
-            !audio && beep.pause()
-            clearTimeout(tick)
+      } else {
+        if (parseInt(roundAlarm.duration, 10) >= time.seconds) {
+          roundAlarm.play();
         }
-      , start: function () {
-            timeout && action.reset()
-            clearTimeout(tick)
-            stage.classList.add('on')
-            tick = setInterval(ticker, 1000)
-        }
+      }
+      if (!time.seconds) {
+        stage.classList.add('timeout');
+        timeout = true;
+        action.pause(true);
+        action.reset();
+        action.start();
+        roundsCounter++;
+      }
     }
+    display();
+  }
 
-    function ticker() {
-        time.seconds--;
-        if (time.seconds < 0) {
-            time.seconds = 59;
-            time.minutes--;
-        }
-        if (!time.minutes) {
-            if (parseInt(beep.duration, 10) >= time.seconds) {
-                beep.play()
-            }
-            if (!time.seconds) {
-                stage.classList.add('timeout')
-                timeout = true;
-                action.pause(true);
-            }
-        }
-        display()
-    }
+  clock.querySelector('.toggle-settings').addEventListener('click', function () {
+    let settings = clock.querySelector('.settings');
+    settings.style.display = (settings.style.display === 'block')? 'none' : 'block';
+  }, false);
+  clock.querySelector('.apply-settings').addEventListener('click', function () {
+    action.reset();
+    clock.querySelector('.settings').style.display = 'none';
+  }, false);
+  clock.querySelector('button.start').addEventListener('click', action.start, false);
+  clock.querySelector('button.pause').addEventListener('click', action.pause, false);
 
-    clock.addEventListener('click', function (event) {
-        var bt = event.target.classList
-        for (var name in action) {
-            bt.contains(name) && action[name]()
-        }
-    }, false)
-
-    stage.classList.add('show')
-    action.reset()
-})()
+  document.body.onload = action.reset;
+})();

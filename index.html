@@ -8,7 +8,15 @@
 <body>
     <div class="clock">
         <audio src="assets/sounds/round.wav" id="round" preload="auto"></audio>
+        <audio src="assets/sounds/match.wav" id="match" preload="auto"></audio>
+        <div class="toggle-settings">&#9881;</div>
+        <div class="settings">
+            <input type="number" id="roundsCount"> <em>slots</em> de
+            <input type="number" id="roundSize"> minutos.
+            <span class="apply-settings">Aplicar</span>
+        </div>
         <div class="display"></div>
+        <div class="status"></div>
         <button class="start" type="button">start</button>
         <button class="pause" type="button">pause</button>
     </div>

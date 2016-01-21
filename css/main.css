@@ -7,7 +7,7 @@ body {
     font-family: arial;
 }
 body.on {
-    background: #002345;
+    background: #1D8000;
 }
 body.timeout {
     background: darkred;
@@ -28,11 +28,66 @@ body.timeout {
     display: block;
 }
 
+.apply-settings {
+    padding: 1vw;
+    background: rgba(255, 255, 255, .1);
+    color: rgba(255, 255, 255, .8);
+    border-radius: 5px;
+}
+.apply-settings:hover {
+    cursor: pointer;
+}
+
+.toggle-settings {
+    font-size: 3vw;
+    line-height: 3vh;
+    height: 3vh;
+    width: 3vw;
+    position: absolute;
+    top: 0;
+    right: 0;
+    letter-spacing: -.05em;
+    color: rgba(255, 255, 255, .1);
+}
+
+.toggle-settings:hover {
+    cursor: pointer;
+    color: rgba(255, 255, 255, .6);
+}
+
+.settings {
+    display: none;
+    font-size: 2vw;
+    line-height: 10vh;
+    letter-spacing: -.05em;
+    color: rgba(255, 255, 255, .6);
+}
+
+.settings input {
+    font-size: 2vw;
+    line-height: 2vh;
+    padding: 0;
+    width: 4vw;
+    text-align: center;
+    font-weight: bold;
+}
+
 .display {
     font-size: 30vw;
     line-height: 60vh;
     letter-spacing: -.05em;
     color: rgba(255, 255, 255, .6);
+}
+
+.status {
+    position: absolute;
+    text-align: left;
+    bottom: 0;
+    left: 0;
+   font-size: 4vw;
+   line-height: 8vh;
+   /*letter-spacing: -.05em;*/
+   color: rgba(255, 255, 255, .6);
 }
 
 button {
@@ -41,7 +96,7 @@ button {
     display: inline-block;
     border: none;
     width: 14vw;
-    margin: 0 1vw;
+    margin: 4vw;
     font-size: 3vw;
     line-height: 8vw;
     cursor: pointer;
