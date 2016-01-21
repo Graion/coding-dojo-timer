@@ -23,7 +23,7 @@
       status = clock.querySelector('.status');
 
     display.textContent = pad(time.minutes) + ':' + pad(time.seconds);
-    status.innerHTML = 'Slot: ' + ((roundsCounter % roundPerMatch) || roundPerMatch) + ' de ' + roundPerMatch + ' <br>Ronda: ' + (Math.floor(roundsCounter / roundPerMatch) + 1);
+    status.innerHTML = 'Rounds: ' + ((roundsCounter % roundPerMatch) || roundPerMatch) + ' de ' + roundPerMatch + ' <br>Set: ' + (Math.floor(roundsCounter / roundPerMatch) + 1);
   }
 
   let clock = document.querySelector('.clock'),
