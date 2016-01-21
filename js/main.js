@@ -28,12 +28,21 @@
 
   let clock = document.querySelector('.clock'),
     stage = document.body,
-    roundAlarm = clock.querySelector('audio#round'),
+    beepAlarm = clock.querySelector('audio#beep'),
     matchAlarm = clock.querySelector('audio#match'),
+    roundsAlarm = {
+      '1': clock.querySelector('audio#round-1'),
+      '2': clock.querySelector('audio#round-2'),
+      '3': clock.querySelector('audio#round-3'),
+      '4': clock.querySelector('audio#round-4'),
+      '5': clock.querySelector('audio#round-5'),
+      '6': clock.querySelector('audio#round-6'),
+    },
     roundsCounter = 1,
     time,
     tick,
-    timeout;
+    timeout,
+    begins = true;
 
   let action = {
     reset: function () {
@@ -41,8 +50,8 @@
       action.pause();
       stage.classList.remove('timeout');
       timeout = false;
-      if (roundAlarm.currentTime) {
-        roundAlarm.currentTime = 0;
+      if (beepAlarm.currentTime) {
+        beepAlarm.currentTime = 0;
       }
       time = {minutes: roundTime, seconds: 0};
       display();
@@ -50,14 +59,20 @@
     pause: function (audio) {
       stage.classList.remove('on');
       if (!audio) {
-        ((roundsCounter % roundPerMatch === 0)? matchAlarm : roundAlarm).pause();
+        ((roundsCounter % roundPerMatch === 0)? matchAlarm : beepAlarm).pause();
       }
       clearTimeout(tick);
     },
     start: function () {
+      if (begins) {
+        roundsAlarm[roundsCounter % roundPerMatch || 5].play();
+        begins = false;
+      }
+
       if (timeout) {
         action.reset();
       }
+
       clearTimeout(tick);
       stage.classList.add('on');
       tick = setInterval(ticker, 1000);
@@ -76,17 +91,18 @@
           matchAlarm.play();
         }
       } else {
-        if (parseInt(roundAlarm.duration, 10) >= time.seconds) {
-          roundAlarm.play();
+        if (parseInt(beepAlarm.duration, 10) >= time.seconds) {
+          beepAlarm.play();
         }
       }
       if (!time.seconds) {
         stage.classList.add('timeout');
+        roundsCounter++;
+        begins = true;
         timeout = true;
         action.pause(true);
         action.reset();
         action.start();
-        roundsCounter++;
       }
     }
     display();
